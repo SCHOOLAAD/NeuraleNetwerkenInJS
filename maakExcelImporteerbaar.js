@@ -1,0 +1,2 @@
+const fs = require("node:fs");
+fs.writeFileSync(process.argv[2]+"-fix.csv", fs.readFileSync(process.argv[2], {encoding: "latin1"}).replaceAll(',', ';').replaceAll('.', ','), {encoding: "latin1"}); // dit is omdat mijn excel op zn nederlandsch staat

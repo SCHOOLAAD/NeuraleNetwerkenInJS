@@ -1,0 +1,14 @@
+{
+  "name": "neuralenetwerkeninjs",
+  "version": "0.0.1",
+  "description": "Neurale Netwerken, Geïmplementeerd In JS, voor een pws",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index"
+  },
+  "author": "Adriaan Zwemer",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "pngjs": "^7.0.0"
+  }
+}
