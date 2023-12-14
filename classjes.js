@@ -36,7 +36,7 @@ class Laag {
 	berekenWaarden( invoerWaarden ){
 		let gewogenInvoertjes = new Array(this.uitNodes);
 		for (let i=0; i < this.uitNodes; i++){
-			let gewogenInvoer = 1*this.biases[i]; // voorkomen dat het een dom pointer ding wordt
+			let gewogenInvoer = 0+this.biases[i]; // voorkomen dat het een dom pointer ding wordt
 			for (let inNode = 0; inNode < this.inNodes; inNode++){
 				//debugger;
 				gewogenInvoer += invoerWaarden[inNode] * this.wegingen[inNode+i*this.inNodes];
@@ -47,7 +47,7 @@ class Laag {
 		return gewogenInvoertjes;
 	}
 	static nietLineaireActivatieFunctie(x){
-		return  x / (1 + Math.abs(x));
+		return  x / (1 + Math.abs(x));//math.sign(x);//Math.sign(x)*Math.min(Math.abs(x),1)
 	}
 	get tekst(){
 		let tekstWaarde = `L${this.inNodes}/${this.uitNodes}\n`;

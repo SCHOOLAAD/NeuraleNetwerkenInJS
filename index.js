@@ -4,12 +4,18 @@ const {NNet, Laag} = require("./classjes");
 const pngParser = require("pngjs").PNG.sync; // ik ga niet helemaal zelf een png-parser schrijven, dat is nu niet is scope voor dit pws
 const fs = require("node:fs");
 
-const aantalRondes = 30000;
+/*const aantalRondes = 10000;
 const aantalModellen = 32;
 const aantalKeerUitvoerenPerRonde = 600;
 const mutatieSchaal = 40;
 const dataset = "testData3.png";
-const initGroottes = [3,13,16,16,16,20,16,16,1];
+const datasetKanaal = 1;
+const datasetSchaal = 2;
+const initGroottes = [2,16,16,16,16,16,1];*/
+
+
+const {aantalRondes, aantalModellen, aantalKeerUitvoerenPerRonde, mutatieSchaal ,dataset, datasetKanaal, datasetSchaal, initGroottes} =require("./parameters");
+
 
 
 let bestandsnaam;
@@ -18,7 +24,7 @@ const testAfbeelding = pngParser.read(fs.readFileSync(dataset))
 const testData = new Array(testAfbeelding.data.length/4);
 for (let i= 0; i < testData.length; i++){
 	
-	testData[i]=2*testAfbeelding.data[1+i*4]/255;
+	testData[i]=datasetSchaal*testAfbeelding.data[datasetKanaal+i*4]/255;
 }
 // maak een hele boel modellen met random waarden, een hele boel is blijkbaar 6.
 const modellen = new Array();
@@ -40,13 +46,13 @@ let spec="";
 if(bestandsnaam)spec=`, vorig_bestand=${bestandsnaam}`;
 else spec=`, init_groottes=${initGroottes}`;
 
-let scores = `rondes=${aantalRondes}, modellen=${modellen.length}, score_gebaseerd_op=${aantalKeerUitvoerenPerRonde}, mutatieschaal=${mutatieSchaal}, dataset=${dataset}${spec}\n`;
+let scores = `${JSON.stringify(require("./parameters"))}\n`;
 for (let i= 1; i <= aantalRondes; i++){
 	//voer uit en evalueer resultaten
 	let scoreGemiddelde =0; 
 	//let scoreMax = -Infinity;
 	//let scoreMin = Infinity;
-	scores += '\n'+i;
+	//scores += '\n'+i;
 	
 	
 	for (let j = 0; j < (aantalModellen-1)/2; j++){ //laagste helft vermoorden en vervangen met bovenste helft
@@ -86,7 +92,7 @@ for (let i= 1; i <= aantalRondes; i++){
 		//scoreMax = Math.max(scoreMax, modellen[j].score);
 		//scoreMin = Math.min(scoreMin, modellen[j].score);
 		modellen[j].score=(modellen[j].score/aantalKeerUitvoerenPerRonde)**.5;
-		scores += ", " + bscore;
+		scores += "\n"+i+", " + bscore;
 	}
 	modellen.sort(sorteerFunctie);
 	//const i=0;
@@ -98,7 +104,7 @@ const dn = Date.now();
 let resultaatTekst = "";
 modellen.forEach((model)=>{resultaatTekst+=model.net.tekst}); //we hoeven nu niet heel efficiënt te zijn, we kunnen dus forEach gebruiken.
 fs.writeFileSync(`${bestandsnaam||"modellen"}-${dn}.txt`, resultaatTekst, {encoding: "latin1"});
-
+console.log(dn);
 
 fs.writeFileSync(`statistiek-${bestandsnaam||""}${dn}.csv`, scores, {encoding: "latin1"});
 
